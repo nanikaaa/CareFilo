@@ -9,7 +9,7 @@ const Register = async ({
 }: {
   params: { userId: string };
 }) => {
-  const user = await getUser(userId);
+  const user = (await getUser(userId)) as User;
   const patient = await getPatient(userId);
 
   if (patient) redirect(`/patients/${userId}/new-appointment`);

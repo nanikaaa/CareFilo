@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
 import { getAppointment } from "@/lib/actions/appointment.actions";
 import { formatDateTime } from "@/lib/utils";
+import { Appointment } from "@/types/appwrite.types";
 
 const RequestSuccess = async ({
   searchParams,
   params: { userId },
 }: SearchParamProps) => {
   const appointmentId = (searchParams?.appointmentId as string) || "";
-  const appointment = await getAppointment(appointmentId);
+  const appointment = (await getAppointment(appointmentId)) as Appointment;
 
   const doctor = Doctors.find(
-    (doctor) => doctor.name === appointment.primaryPhysician
+    (doctor) => doctor.name === (appointment?.primaryPhysician || "")
   );
 
   return (
@@ -50,16 +51,20 @@ const RequestSuccess = async ({
 
         <section className="request-details">
           <p>Requested appointment details: </p>
-          <div className="flex items-center gap-3">
-            <Image
-              src={doctor?.image!}
-              alt="doctor"
-              width={100}
-              height={100}
-              className="size-6"
-            />
-            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
-          </div>
+          {doctor ? (
+            <div className="flex items-center gap-3">
+              <Image
+                src={doctor.image}
+                alt="doctor"
+                width={100}
+                height={100}
+                className="size-6"
+              />
+              <p className="whitespace-nowrap">Dr. {doctor.name}</p>
+            </div>
+          ) : (
+            <p>Doctor information is not available.</p>
+          )}
           <div className="flex gap-2">
             <Image
               src="/assets/icons/calendar.svg"
@@ -67,7 +72,11 @@ const RequestSuccess = async ({
               width={24}
               alt="calendar"
             />
-            <p> {formatDateTime(appointment.schedule).dateTime}</p>
+            <p>
+              {appointment
+                ? formatDateTime(appointment.schedule).dateTime
+                : "Appointment date not available"}
+            </p>
           </div>
         </section>
 

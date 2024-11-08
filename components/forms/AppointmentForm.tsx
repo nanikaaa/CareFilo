@@ -101,6 +101,7 @@ export const AppointmentForm = ({
             cancellationReason: values.cancellationReason,
           },
           type,
+          timeZone: "Asia/Manila",
         };
 
         const updatedAppointment = await updateAppointment(appointmentToUpdate);
