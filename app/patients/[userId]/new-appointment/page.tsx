@@ -28,7 +28,7 @@ const Appointment = async ({
           </div>
 
           <AppointmentForm
-            patientId={patient?.$id}
+            patientId={patient?.$id || ""}
             userId={userId}
             type="create"
           />
