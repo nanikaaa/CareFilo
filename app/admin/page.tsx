@@ -5,6 +5,7 @@ import { StatCard } from "@/components/StatCard";
 import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/DataTable";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
+import { Appointment } from "@/types/appwrite.types";
 
 const AdminPage = async () => {
   const appointments = await getRecentAppointmentList();
@@ -38,10 +39,10 @@ const AdminPage = async () => {
               </p>
             </div>
             <Image
-              src="/assets/images/admin-img.png" // Replace with the correct path to your uploaded image
+              src="/assets/images/admin-img.png"
               alt="doctor illustration"
-              width={150} // Adjust width as needed
-              height={150} // Adjust height as needed
+              width={150}
+              height={150}
               className="my-0 object-contain py-0 "
             />
           </div>
@@ -50,25 +51,28 @@ const AdminPage = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduledCount}
+            count={appointments?.scheduledCount || 0}
             label="Scheduled appointments"
             icon={"/assets/icons/appointments.svg"}
           />
           <StatCard
             type="pending"
-            count={appointments.pendingCount}
+            count={appointments?.pendingCount || 0}
             label="Pending appointments"
             icon={"/assets/icons/pending.svg"}
           />
           <StatCard
             type="cancelled"
-            count={appointments.cancelledCount}
+            count={appointments?.cancelledCount || 0}
             label="Cancelled appointments"
             icon={"/assets/icons/cancelled.svg"}
           />
         </section>
 
-        <DataTable columns={columns} data={appointments.documents} />
+        <DataTable<Appointment>
+          columns={columns}
+          data={(appointments?.documents || []) as Appointment[]}
+        />
       </main>
     </div>
   );
